@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
+import javafx.util.Callback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import sepm.ss15.grp16.entity.calendar.WorkoutplanExport;
@@ -21,7 +22,9 @@ import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.chrono.Chronology;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Optional;
 
 /**
@@ -36,6 +39,7 @@ public class WorkoutPlanToCalendarController extends Controller {
     private TrainingsplanService trainingsplanService;
     private UserService userService;
 
+    private boolean finished = false;
 
     @FXML
     private CheckBox thursdayCheck;
@@ -70,7 +74,32 @@ public class WorkoutPlanToCalendarController extends Controller {
     @Override
     public void initController() {
         setUpListView();
-        plan_interClassCommunication = ((WorkoutPlansController) this.getParentController()).getPlan_interClassCommunication();
+        Controller controller = this.getParentController();
+
+        if (controller instanceof WorkoutPlansController)
+            plan_interClassCommunication = ((WorkoutPlansController) controller).getPlan_interClassCommunication();
+        else
+            plan_interClassCommunication = ((GeneratedWorkoutPlanResultController) controller).getGeneratedWorkoutPlan();
+
+        dateField.setValue(LocalDate.now());
+        dateField.setShowWeekNumbers(false);
+
+        final Callback<DatePicker, DateCell> dayCellFactory = new Callback<DatePicker, DateCell>() {
+            @Override
+            public DateCell call(final DatePicker datePicker) {
+                return new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item.isBefore(LocalDate.now())) {
+                            setDisable(true);
+                        }
+                    }
+                };
+            }
+        };
+        dateField.setDayCellFactory(dayCellFactory);
+        dateField.setChronology(Chronology.ofLocale(Locale.GERMAN));
 
         if (plan_interClassCommunication != null) {
             txtName.setText(plan_interClassCommunication.getName());
@@ -120,11 +149,17 @@ public class WorkoutPlanToCalendarController extends Controller {
         if (export != null) {
             try {
                 calendarService.exportToCalendar(export);
+                finished = true;
+                mainFrame.navigateToParent();
+                plan_interClassCommunication = null;
             } catch (ServiceException e) {
-                e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Fehler");
+                alert.setHeaderText("Falsche Daten!");
+                alert.setContentText(e.getMessage());
+                alert.showAndWait();
             }
-            mainFrame.navigateToParent();
-            plan_interClassCommunication = null;
+
 
         }
     }
@@ -183,7 +218,7 @@ public class WorkoutPlanToCalendarController extends Controller {
 
         if (dayOfWeeks.length < 1) {
             error = true;
-            errormessage = "Bitte mindestens einen Wochentag wählen!";
+            errormessage = "Bitte mindestens einen Wochentag w\u00e4hlen!";
         }
 
         LocalDate localDate = dateField.getValue();
@@ -194,7 +229,7 @@ public class WorkoutPlanToCalendarController extends Controller {
             date = Date.from(instant);
         } else {
             error = true;
-            errormessage = "Bitte ein Startdatum wählen!";
+            errormessage = "Bitte ein Startdatum w\u00e4hlen!";
         }
 
         if (error) {
@@ -216,6 +251,10 @@ public class WorkoutPlanToCalendarController extends Controller {
 
     public void setCalendarService(CalendarService calendarService) {
         this.calendarService = calendarService;
+    }
+
+    public boolean isFinished() {
+        return finished;
     }
 }
 

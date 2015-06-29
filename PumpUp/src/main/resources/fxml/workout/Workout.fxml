@@ -32,15 +32,15 @@
                         <Region HBox.hgrow="ALWAYS" />
                         <VBox HBox.hgrow="ALWAYS">
                             <children>
-                        <Pane fx:id="pictureFitPane" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-                           <children>
-                                      <ImageView fx:id="exerciseImageView" pickOnBounds="true" preserveRatio="true">
-                                          <viewport>
-                                              <Rectangle2D />
-                                          </viewport>
-                                      </ImageView>
-                           </children>
-                        </Pane>
+                                <Pane fx:id="pictureFitPane" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                    <children>
+                                        <ImageView fx:id="exerciseImageView" pickOnBounds="true" preserveRatio="true">
+                                            <viewport>
+                                                <Rectangle2D />
+                                            </viewport>
+                                        </ImageView>
+                                    </children>
+                                </Pane>
                                 <Label fx:id="discriptionLabel" wrapText="true" />
                             </children>
                         </VBox>
@@ -71,8 +71,8 @@
                         <Separator orientation="VERTICAL" prefHeight="200.0" />
                         <VBox minWidth="200.0" prefWidth="200.0" spacing="20.0">
                             <children>
-                                  <Label prefHeight="30.0" text="Letze Übung:" />
-                                  <Label fx:id="lastExerciseLable" style="-fx-font-weight: bold;" styleClass="asdf" />
+                                <Label prefHeight="30.0" text="Letze Übung:" />
+                                <Label fx:id="lastExerciseLable" style="-fx-font-weight: bold;" styleClass="asdf" />
                                 <HBox>
                                     <children>
                                         <Label text="Dauer" />
@@ -95,7 +95,7 @@
                 <HBox VBox.vgrow="ALWAYS">
                     <children>
                         <Region minWidth="50.0" HBox.hgrow="NEVER" />
-                        <Button fx:id="pauseButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onPause" prefHeight="50.0" text="Pause" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="pauseButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onPause" prefHeight="50.0" styleClass="btnReady" stylesheets="@../../css/playlistStyle.css" text="Pause" HBox.hgrow="ALWAYS" />
                         <Region minWidth="50.0" HBox.hgrow="NEVER" />
                     </children>
                 </HBox>

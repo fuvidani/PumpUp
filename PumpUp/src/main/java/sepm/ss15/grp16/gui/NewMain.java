@@ -12,6 +12,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class NewMain extends Application {
     private static final Logger LOGGER = LogManager.getLogger(NewMain.class);
+    private static ClassPathXmlApplicationContext context = null;
 
     public static void main(String[] args) {
         try {
@@ -19,13 +20,15 @@ public class NewMain extends Application {
             launch(args);
         } catch (Exception e) {
             e.printStackTrace();
+            context.close();
+
         }
 
     }
 
     public void start(final Stage primaryStage) throws Exception {
         LOGGER.info("starting application");
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring-config.xml");
+        context = new ClassPathXmlApplicationContext("spring-config.xml");
 
         FrameWindow mainFrame = new FrameWindow(context, primaryStage, PageEnum.Login);
 

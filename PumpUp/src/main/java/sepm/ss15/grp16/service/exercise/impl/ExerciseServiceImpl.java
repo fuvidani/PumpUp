@@ -34,6 +34,15 @@ public class ExerciseServiceImpl implements ExerciseService {
         this.userService = userService;
     }
 
+    /**
+     * creating a new exercise and returning it for further usage
+     *
+     * @param exercise which shall be inserted into the underlying persistance layer
+     *                 must not be null, id must not be null
+     * @return the reference to the exercise with an id
+     * @throws ServiceException
+     * @throws ValidationException
+     */
     @Override
     public Exercise create(Exercise exercise) throws ServiceException, ValidationException {
         LOGGER.debug("creating new Exercise in service");
@@ -46,6 +55,13 @@ public class ExerciseServiceImpl implements ExerciseService {
         }
     }
 
+    /**
+     * finding all exercises and filtering the exercises
+     * after the current/logged in user
+     *
+     * @return a list of all exercises which are from the system or the current user
+     * @throws ServiceException
+     */
     @Override
     public List<Exercise> findAll() throws ServiceException {
         try {
@@ -63,6 +79,13 @@ public class ExerciseServiceImpl implements ExerciseService {
         }
     }
 
+    /**
+     * searching after exactely one exercise with the given id
+     *
+     * @param id exercise to search for, is unique
+     * @return one exercise or null
+     * @throws ServiceException
+     */
     @Override
     public Exercise searchByID(int id) throws ServiceException {
         try {
@@ -72,6 +95,14 @@ public class ExerciseServiceImpl implements ExerciseService {
         }
     }
 
+    /**
+     * updating a given exercise to updated values
+     *
+     * @param exercise which shall be updated
+     *                 must not be null, id must not be null
+     * @return the reference to the updated exercise
+     * @throws ServiceException
+     */
     @Override
     public Exercise update(Exercise exercise) throws ServiceException {
         LOGGER.debug("updating exercise in service");
@@ -85,6 +116,12 @@ public class ExerciseServiceImpl implements ExerciseService {
         }
     }
 
+    /**
+     * deleting an exercise which must not be null
+     *
+     * @param exercise which shall be deleted from the underlying persitance implementation layer
+     * @throws ServiceException
+     */
     @Override
     public void delete(Exercise exercise) throws ServiceException {
         LOGGER.debug("deleting exercise in service");
@@ -113,10 +150,10 @@ public class ExerciseServiceImpl implements ExerciseService {
         if (exercise == null)
             throw new ValidationException("validation not passed. exercise is null");
 
-        if (exercise.getName().equals("") || exercise.getName() == null || exercise.getName().isEmpty())
+        if (exercise.getName() == null || exercise.getName().equals("") || exercise.getName().isEmpty())
             throw new ValidationException("name can not be null");
 
-        if (exercise.getCalories() <= 0)
+        if (exercise.getCalories() == null || exercise.getCalories() <= 0)
             throw new ValidationException("validation not passed. calories can not be lower or equal to 0");
     }
 

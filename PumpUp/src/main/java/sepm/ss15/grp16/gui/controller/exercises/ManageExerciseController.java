@@ -9,9 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,74 +36,25 @@ import java.util.Optional;
 public class ManageExerciseController extends Controller {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    @FXML
-    private AnchorPane pane;
-    @FXML
-    private CheckBox punchBagCheck;
+
     @FXML
     private ImageView imageView;
-    @FXML
-    private CheckBox chestCheck;
-    @FXML
-    private TextField videoLinkField;
+
     @FXML
     private TextArea descriptionArea;
     @FXML
-    private CheckBox tricepCheck;
-    @FXML
     private TextField caloriesField;
-    @FXML
-    private CheckBox legsCheck;
-    @FXML
-    private TextField durationOfQuantityField;
-    @FXML
-    private CheckBox abWheelCheck;
-    @FXML
-    private RadioButton quantityTypeRadio;
-    @FXML
-    private CheckBox balanceCheck;
-    @FXML
-    private CheckBox shoulderCheck;
-    @FXML
-    private CheckBox jumpRopeCheck;
-    @FXML
-    private RadioButton secondsTypeRadio;
-    @FXML
-    private CheckBox enduranceCheck;
-    @FXML
-    private CheckBox strengthCheck;
-    @FXML
-    private CheckBox flexibilityCheck;
-    @FXML
-    private CheckBox backCheck;
+
     @FXML
     private ListView<String> imagesListView;
     @FXML
-    private CheckBox exerciseBallCheck;
-    @FXML
-    private CheckBox barCheck;
-    @FXML
-    private CheckBox dumbbellCheck;
-    @FXML
-    private CheckBox expanderCheck;
-    @FXML
-    private CheckBox abdominalCheck;
-    @FXML
     private TextField exerciseNameField;
-    @FXML
-    private CheckBox bicepCheck;
-    @FXML
-    private TextField durationField;
-    @FXML
-    private VBox vBox;
     @FXML
     private VBox vboxType;
     @FXML
     private VBox vboxMuscle;
     @FXML
     private VBox vboxEquipment;
-    @FXML
-    private WebView webViewVideo;
     @FXML
     private Button deleteBtn = new Button();
     @FXML
@@ -116,11 +65,8 @@ public class ManageExerciseController extends Controller {
     private UserService userService;
     private List<String> exerciseGifList = new ArrayList<>();
     private ObservableList<String> observablePicListData = FXCollections.observableArrayList();
-
-    private ExercisesController exerciseController;
     private Exercise exercise = null;
     private String picture;
-
     private ObservableList<CheckBox> checkboxes = FXCollections.observableArrayList();
     private List<CheckBox> allCheckboxes = new ArrayList<>();
 
@@ -141,13 +87,15 @@ public class ManageExerciseController extends Controller {
     }
 
 
+    /**
+     * initializing the controller with all services and layout properties needed
+     */
     @Override
     public void initController() {
 
-        //dynamisches laden von checkboxen
+        //loading the checkboxes dynamically
         try {
             exercise = ((ExercisesController) this.getParentController()).getExercise();
-            webViewVideo.setVisible(false);
             for (TrainingsCategory t : categoryService.getAllTrainingstype()) {
                 CheckBox box = new CheckBox(t.getName());
                 box.setId("" + t.getId());
@@ -197,6 +145,9 @@ public class ManageExerciseController extends Controller {
         setContent();
     }
 
+    /**
+     * setting the contnet for the page
+     */
     private void setContent() {
         if (this.exercise != null) { //update called
             observablePicListData.removeAll();
@@ -229,11 +180,13 @@ public class ManageExerciseController extends Controller {
 
     }
 
-    @FXML
-    private void playVideo() {
-        webViewVideo.getEngine().load(videoLinkField.getText());
-    }
-
+    /**
+     * showing one picture out of the picture list the
+     * current exercise has, defined by the given index
+     * to load from the list of pictures
+     *
+     * @param index which picture is to display
+     */
     private void showPic(String oldValue, String newValue) {
         try {
             File file;
@@ -272,6 +225,12 @@ public class ManageExerciseController extends Controller {
     }
 
 
+    /**
+     * handling the cancel button
+     * with an alert box
+     *
+     * @param event
+     */
     @FXML
     void cancelClicked(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -290,6 +249,13 @@ public class ManageExerciseController extends Controller {
     }
 
 
+    /**
+     * handling the save button event
+     * extracting an exercise DTO object out of all given values
+     * and then passing the object to the service layer
+     *
+     * @param event
+     */
     @FXML
     void saveClicked(ActionEvent event) {
         try {
@@ -308,6 +274,11 @@ public class ManageExerciseController extends Controller {
 
     }
 
+    /**
+     * method to browse the filesystem after jpg and png files
+     *
+     * @param event
+     */
     @FXML
     void browseClicked(ActionEvent event) {
         LOGGER.debug("browse clicked");
@@ -369,6 +340,9 @@ public class ManageExerciseController extends Controller {
 
     }
 
+    /**
+     * removing pictures which are actually stored with the exercise
+     */
     @FXML
     private void removeClicked() {
 
@@ -397,6 +371,12 @@ public class ManageExerciseController extends Controller {
 
     }
 
+    /**
+     * extracting an exercise object out of all the given information the
+     * user has provided
+     *
+     * @return a new exercise DTO object
+     */
     private Exercise extractExercise() {
         Double calories = 0.0;
         try {
